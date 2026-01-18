@@ -33,8 +33,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: "docker-demo"
-          environment_name: "Docker-demo-dev"
+          application_name: "new-docker-demo"
+          environment_name: "New-docker-demo-dev"
           region: "us-east-1"
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
