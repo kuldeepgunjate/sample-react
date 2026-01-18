@@ -19,6 +19,10 @@ jobs:
       - name: Run Tests
         run: docker run -e CI=true kg/docker-demo npm run test
 
+      # 3. Build the production image with the new tag
+      - name: Build Production Image
+        run: docker build -t kg/docker-demo .
+
       # 4. Package for AWS
       - name: Generate Deployment Package
         run: zip -r deploy.zip . -x "*.git*" -x "docker-compose-dev.yml" -x "Dockerfile.dev" -x "node_modules/*"
@@ -34,3 +38,4 @@ jobs:
           region: "us-east-1"
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
+          use_existing_version_if_available: true
