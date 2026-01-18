@@ -1,0 +1,40 @@
+name: Deploy React to AWS
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # 1. Build using your new tag
+      - name: Build Test Image
+        run: docker build -t kg/docker-demo -f Dockerfile.dev .
+
+      # 2. Run tests using the new tag
+      - name: Run Tests
+        run: docker run -e CI=true kg/docker-demo npm run test
+
+      # 3. Build the production image with the new tag
+      - name: Build Production Image
+        run: docker build -t kg/docker-demo .
+
+      # 4. Package for AWS
+      - name: Generate Deployment Package
+        run: zip -r deploy.zip . -x "*.git*"
+
+      # 5. Deploy to Elastic Beanstalk
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          application_name: "docker"
+          environment_name: "docker-env"
+          region: "us-east-1"
+          version_label: ${{ github.sha }}
+          deployment_package: deploy.zip
