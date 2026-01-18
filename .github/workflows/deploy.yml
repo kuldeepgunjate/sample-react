@@ -25,7 +25,7 @@ jobs:
 
       # 4. Package for AWS
       - name: Generate Deployment Package
-        run: zip -r deploy.zip . -x "*.git*" -x "docker-compose-dev.yml" -x "Dockerfile.dev" -x "node_modules/*"
+        run: zip -r deploy.zip . -x "*.git*" -x "docker-compose*" -x "Dockerfile.dev" -x "node_modules/*"
 
       # 5. Deploy to Elastic Beanstalk
       - name: Deploy to Elastic Beanstalk
